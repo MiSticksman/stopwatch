@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:timer/screens/timer_screen/timer_screen_presenter.dart';
@@ -10,9 +9,9 @@ class TimerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Provider<TimerScreenPresenter>(
-      create: (context) => TimerScreenPresenter(
-        timerModel: context.read<TimerModel>(),
-      ),
+      create: (_) => TimerScreenPresenter(
+        timerModel: TimerModel(),
+      )..init(),
       child: const TimerScreenView(),
     );
   }

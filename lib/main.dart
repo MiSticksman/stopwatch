@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:timer/screens/timer_screen/timer_screen.dart';
 import 'package:timer/screens/timer_screen/timer_screen_presenter.dart';
-import 'package:timer/screens/timer_screen/timer_screen_view.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => TimerModel(),
-      child: const MyApp(),
-    ),
+    const MyApp(),
   );
 }
 
@@ -43,7 +40,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: TimerScreenView(),
+      home: const TimerScreen(),
     );
   }
 }

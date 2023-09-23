@@ -1,1 +1,1 @@
-enum TimerState {initial, processing, pause, finished}
+enum TimerState { initial, processing, pause, finished }
