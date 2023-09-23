@@ -12,6 +12,7 @@ class TimerScreen extends StatelessWidget {
       create: (_) => TimerScreenPresenter(
         timerModel: TimerModel(),
       )..init(),
+      dispose: (context, presenter) => presenter.dispose(),
       child: const TimerScreenView(),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:timer/screens/timer_screen/timer_state.dart';
 
@@ -7,17 +8,21 @@ class TimerScreenPresenter {
 
   TimerModel timerModel;
 
-  late final String started;
-  late final String finished;
-
   final TextEditingController timerNameTextController =
-      TextEditingController(text: 'TimerName');
+  TextEditingController(text: 'TimerName');
   final TextEditingController descriptionTextController =
-      TextEditingController();
+  TextEditingController();
 
   final ValueNotifier<TimerState> timerStatusState =
-      ValueNotifier(TimerState.initial);
+  ValueNotifier(TimerState.initial);
   final ValueNotifier<String> timerDispalyedStatus = ValueNotifier('start');
+
+  late final DateTime startedDateTime;
+  late final DateTime finishedDateTime;
+  final ValueNotifier<String> startedTimerTextState = ValueNotifier('');
+  final ValueNotifier<String> finishedTimerTextState = ValueNotifier('');
+  final ValueNotifier<String> resultTimerTextState = ValueNotifier('');
+
 
   void init() {
     timerStatusState.addListener(_getActualTimerButtonText);
@@ -26,7 +31,9 @@ class TimerScreenPresenter {
   void start() {
     if (timerStatusState.value == TimerState.initial) {
       timerModel.startTimer();
-      started = DateTime.now().toLocal().toString();
+      startedDateTime = DateTime.now();
+      startedTimerTextState.value =
+          DateFormat('MMMd HH:mm:ss').format(DateTime.now());
       timerStatusState.value = TimerState.processing;
     }
   }
@@ -49,8 +56,11 @@ class TimerScreenPresenter {
     if (timerStatusState.value == TimerState.processing ||
         timerStatusState.value == TimerState.pause) {
       timerModel.finishTimer();
-      finished = DateTime.now().toLocal().toString();
+      finishedDateTime = DateTime.now();
+      finishedTimerTextState.value =
+          DateFormat('MMMd HH:mm:ss').format(DateTime.now());
       timerStatusState.value = TimerState.finished;
+      resultTimerTextState.value = finishedDateTime.difference(startedDateTime).toString();
       //todo add data to database
       dispose();
     }
