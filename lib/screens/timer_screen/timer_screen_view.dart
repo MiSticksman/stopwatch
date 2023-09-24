@@ -38,47 +38,46 @@ class TimerScreenView extends StatelessWidget {
             ValueListenableBuilder(
               valueListenable: presenter.timerStatusState,
               builder: (context, timerStatus, _) {
-                return GestureDetector(
-                  onTap: () {
-                    if (timerStatus == TimerState.initial) {
-                      return presenter.start();
-                    } else if (timerStatus == TimerState.processing) {
-                      return presenter.pause();
-                    } else if (timerStatus == TimerState.pause) {
-                      return presenter.resume();
-                    }
-                  },
-                  onLongPress: () {
-                    if (timerStatus != TimerState.finished) {
-                      return presenter.finish();
-                    }
-                  },
-                  child: Container(
-                    height: 300,
-                    width: 300,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.yellow,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey,
-                          offset: Offset(0.0, 1.0),
-                          blurRadius: 10.0,
+                return StreamBuilder<int>(
+                  stream: presenter.timerModel.rawTime,
+                  builder: (context, snapshot) {
+                    final displayTime = StopWatchTimer.getDisplayTime(
+                        snapshot.data ?? 0);
+                    return GestureDetector(
+                      onTap: () {
+                        if (timerStatus == TimerState.initial) {
+                          return presenter.start();
+                        } else if (timerStatus == TimerState.processing) {
+                          return presenter.pause();
+                        } else if (timerStatus == TimerState.pause) {
+                          return presenter.resume();
+                        }
+                      },
+                      onLongPress: () {
+                        if (timerStatus != TimerState.finished) {
+                          return presenter.finish(snapshot.data ?? 0);
+                        }
+                      },
+                      child: Container(
+                        height: 300,
+                        width: 300,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.yellow,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey,
+                              offset: Offset(0.0, 1.0),
+                              blurRadius: 10.0,
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 20.0, right: 20.0, top: 5),
-                      child: FittedBox(
-                        fit: BoxFit.fitWidth,
-                        child: StreamBuilder<int>(
-                          stream: presenter.timerModel.rawTime,
-                          initialData: 0,
-                          builder: (context, snapshot) {
-                            final displayTime = StopWatchTimer.getDisplayTime(
-                                snapshot.data ?? 0);
-                            return Column(
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20.0, right: 20.0, top: 5),
+                          child: FittedBox(
+                            fit: BoxFit.fitWidth,
+                            child: Column(
                               children: [
                                 Text(
                                   displayTime,
@@ -95,12 +94,12 @@ class TimerScreenView extends StatelessWidget {
                                   },
                                 ),
                               ],
-                            );
-                          },
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
+                    );
+                  }
                 );
               },
             ),

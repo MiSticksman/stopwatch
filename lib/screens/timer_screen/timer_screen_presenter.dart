@@ -17,8 +17,6 @@ class TimerScreenPresenter {
   ValueNotifier(TimerState.initial);
   final ValueNotifier<String> timerDispalyedStatus = ValueNotifier('start');
 
-  late final DateTime startedDateTime;
-  late final DateTime finishedDateTime;
   final ValueNotifier<String> startedTimerTextState = ValueNotifier('');
   final ValueNotifier<String> finishedTimerTextState = ValueNotifier('');
   final ValueNotifier<String> resultTimerTextState = ValueNotifier('');
@@ -31,7 +29,6 @@ class TimerScreenPresenter {
   void start() {
     if (timerStatusState.value == TimerState.initial) {
       timerModel.startTimer();
-      startedDateTime = DateTime.now();
       startedTimerTextState.value =
           DateFormat('MMMd HH:mm:ss').format(DateTime.now());
       timerStatusState.value = TimerState.processing;
@@ -52,15 +49,14 @@ class TimerScreenPresenter {
     }
   }
 
-  void finish() {
+  void finish(int time) {
     if (timerStatusState.value == TimerState.processing ||
         timerStatusState.value == TimerState.pause) {
+      resultTimerTextState.value = StopWatchTimer.getDisplayTime(time);
       timerModel.finishTimer();
-      finishedDateTime = DateTime.now();
       finishedTimerTextState.value =
           DateFormat('MMMd HH:mm:ss').format(DateTime.now());
       timerStatusState.value = TimerState.finished;
-      resultTimerTextState.value = finishedDateTime.difference(startedDateTime).toString();
       //todo add data to database
       dispose();
     }
